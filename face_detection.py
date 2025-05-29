@@ -1,13 +1,17 @@
 import cv2
-import matplotlib.pyplot as plt
+from tinyface import FaceEmbedder, Face
+import numpy as np
 
+# https://docs.opencv.org/4.x/df/d20/classcv_1_1FaceDetectorYN.html
 
 detector = cv2.FaceDetectorYN.create(
     "./data/face_detection_yunet_2023mar.onnx", "", (0, 0), score_threshold=0.5
 )
 
+embedder = FaceEmbedder()
 
-def detect_faces(path: str):
+
+def detect_faces(path: str) -> list[Face]:
     img = cv2.imread(path)
     height, width, _ = img.shape
     detector.setInputSize((width, height))
@@ -19,23 +23,27 @@ def detect_faces(path: str):
         y = int(face[1])
         w = int(face[2])
         h = int(face[3])
+
+        face_landmark_5 = np.array(
+            [
+                [face[4], face[5]],
+                [face[6], face[7]],
+                [face[8], face[9]],
+                [face[10], face[11]],
+                [face[12], face[13]],
+            ]
+        )
+
+        embedding, normed_embedding = embedder.calc_embedding(img, face_landmark_5)
+
         res.append(
-            {"x": x, "y": y, "w": w, "h": h, "cutout": img[y : y + h, x : x + w]}
+            Face(
+                bounding_box=[x, y, w, h],
+                score=face[14],
+                landmark_5=face_landmark_5,
+                embedding=embedding,
+                normed_embedding=normed_embedding,
+            ),
         )
 
     return res
-
-
-def frame_faces(path):
-    img = cv2.imread(path)
-    for face in detect_faces(path):
-        cv2.rectangle(
-            img,
-            (face["x"], face["y"]),
-            (face["x"] + face["w"], face["y"] + face["h"]),
-            (0, 255, 0),
-            4,
-        )
-
-    cv2.imshow("framed", img)
-    cv2.waitKey(0)
