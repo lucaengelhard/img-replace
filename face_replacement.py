@@ -2,6 +2,7 @@ from tinyface import TinyFace, FacePair, VisionFrame, Face
 
 import random
 
+import numpy as np
 from tqdm import tqdm
 
 
@@ -23,8 +24,6 @@ class Modified_TinyFace(TinyFace):
             )
         return temp_vision_frame
 
-    # TODO: Create DB https://thispersondoesnotexist.com/
-    # TODO: function for finding closest match to face
     def swap_faces_db(
         self, vision_frame: VisionFrame, faces: list[Face], options: list[Face]
     ):
@@ -32,16 +31,27 @@ class Modified_TinyFace(TinyFace):
         temp_vision_frame = vision_frame.copy()
 
         for face in tqdm(faces):
-            possible_dest = random.choice(options)
-
-            # while not self._is_similar_face(face, possible_dest):
-            #     print("not similar enough")
-            #     possible_dest = random.choice(options)
+            # possible_dest = random.choice(options)
 
             temp_vision_frame = self.swapper.swap_face(
-                temp_vision_frame, possible_dest, face
+                temp_vision_frame, get_closest_face(face, options), face
             )
 
             temp_vision_frame = self.enhancer.enhance_face(temp_vision_frame, face)
 
         return temp_vision_frame
+
+
+# TODO: Make mor efficient (Vectorisation)
+def get_closest_face(face: Face, db: list[Face]):
+    lowest = None
+    res = db[0]
+
+    for option in db:
+        cos_distance = np.dot(face.normed_embedding, option.normed_embedding)
+
+        if lowest == None or cos_distance < lowest:
+            lowest = cos_distance
+            res = option
+
+    return res
