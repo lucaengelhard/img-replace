@@ -1,21 +1,7 @@
-from tinyface.typing import (
-    Distance,
-    FaceLandmark5,
-    Points,
-)
-
 from tinyface import Face
 
 import cv2
 import numpy
-
-
-def distance_to_face_landmark_5(points: Points, distance: Distance) -> FaceLandmark5:
-    x = points[:, 0::2] + distance[:, 0::2]
-    y = points[:, 1::2] + distance[:, 1::2]
-
-    face_landmark_5 = numpy.stack((x, y), axis=-1)
-    return face_landmark_5
 
 
 def frame_faces(img, faces: list[Face], features=False, scale=1):

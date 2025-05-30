@@ -1,4 +1,6 @@
 import cv2
+from typing import Union
+
 from tinyface import FaceEmbedder, Face
 import numpy as np
 
@@ -11,8 +13,14 @@ detector = cv2.FaceDetectorYN.create(
 embedder = FaceEmbedder()
 
 
-def detect_faces(path: str) -> list[Face]:
-    img = cv2.imread(path)
+def detect_faces(img_input: Union[str, np.ndarray]) -> list[Face]:
+    if isinstance(img_input, str):
+        img = cv2.imread(img_input)
+        if img is None:
+            raise ValueError(f"Could not read image from path: {img_input}")
+    elif isinstance(img_input, np.ndarray):
+        img = img_input
+
     height, width, _ = img.shape
     detector.setInputSize((width, height))
     _, faces = detector.detect(img)

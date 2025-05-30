@@ -1,13 +1,13 @@
 import sys
 
 import cv2
-from tinyface import TinyFace
 
 from face_detection import detect_faces
+from face_replacement import Modified_TinyFace
 from utils import frame_faces, scale_image_to
 
 # Setup
-tinyface = TinyFace()
+tinyface = Modified_TinyFace()
 tinyface.prepare()
 
 # Arguments
@@ -15,22 +15,15 @@ path = "./imgs/base_img.jpg"
 if len(sys.argv) > 1:
     path = sys.argv[1]
 
-
+# Read Image
 img = cv2.imread(path)
 
-# tiny = tinyface.get_many_faces(img)
+# Detect Faces
+faces = detect_faces(img)
 
-faces = detect_faces(path)
-# shifted_faces = [faces[-1]] + faces[:-1]
+# Replace Faces
+output_img = tinyface.swap_faces_db(img, faces, faces)
 
-# output_img = tinyface.swap_faces(
-#     img,
-#     face_pairs=[
-#         FacePair(reference=faces[i], destination=shifted_faces[i])
-#         for i in range(len(faces))
-#     ],
-# )
-
-
-cv2.imshow("res", scale_image_to(frame_faces(img, faces, True, 3), 1920, 1080))
+# Display result
+cv2.imshow("res", scale_image_to(frame_faces(output_img, faces), 1920, 1080))
 cv2.waitKey(0)
