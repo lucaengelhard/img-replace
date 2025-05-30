@@ -7,7 +7,7 @@ import os
 
 from face_detection import detect_faces
 from face_replacement import Modified_TinyFace
-from utils import frame_faces, scale_image_to, get_image_paths, parse_path
+from utils import display_imgs, get_image_paths, parse_path
 
 # Setup
 tinyface = Modified_TinyFace()
@@ -38,8 +38,10 @@ if not args.output == None:
     output_folder = parse_path(args.output)
     output_folder.mkdir(parents=True, exist_ok=True)
 
-
-for path in tqdm(file_paths):
+res = []
+for path in file_paths:
+    print()
+    print(path)
     # Read Image
     img = cv2.imread(path)
 
@@ -53,8 +55,9 @@ for path in tqdm(file_paths):
         output_path = output_folder / (path.stem + "_swapped" + path.suffix)
 
         cv2.imwrite(output_path, output_img)
+    else:
+        res.append([output_img, faces])
 
 
-# Display result
-# cv2.imshow("res", scale_image_to(frame_faces(output_img, faces), 1920, 1080))
-# cv2.waitKey(0)
+if args.output == None:
+    display_imgs([r[0] for r in res], faces=[f[1] for f in res])

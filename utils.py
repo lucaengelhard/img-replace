@@ -61,3 +61,28 @@ def get_image_paths(directory):
 
 def parse_path(str):
     return Path(str).expanduser().resolve()
+
+
+def display_img(img, scale=(1920, 1080), faces=None):
+    if faces != None:
+        cv2.imshow(
+            "img-replace", scale_image_to(frame_faces(img, faces), scale[0], scale[1])
+        )
+    else:
+        cv2.imshow("img-replace", scale_image_to(img, scale[0], scale[1]))
+
+    return cv2.waitKey(0)
+
+
+def display_imgs(imgs: list, scale=(1920, 1080), faces=None):
+    for i, img in enumerate(imgs):
+        i_faces = None
+        if faces != None:
+            i_faces = faces[i]
+
+        key = display_img(img, scale, i_faces)
+
+        if key == 27:
+            break
+
+    cv2.destroyAllWindows()
