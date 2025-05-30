@@ -1,12 +1,10 @@
 import cv2
-from tqdm import tqdm
 
 import argparse
-from pathlib import Path, PurePath
-import os
 
 from face_detection import detect_faces
 from face_replacement import Modified_TinyFace
+from face_creation import read_db
 from utils import display_imgs, get_image_paths, parse_path
 
 # Setup
@@ -20,6 +18,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--filename", help="Input file name")
 parser.add_argument("-d", "--directory", help="Input directory name")
 parser.add_argument("-o", "--output", help="Output dir path")
+parser.add_argument(
+    "-db",
+    "--database",
+    help="Database path of generated faces",
+    default="faces_db.json",
+)
 
 args = parser.parse_args()
 
@@ -38,6 +42,8 @@ if not args.output == None:
     output_folder = parse_path(args.output)
     output_folder.mkdir(parents=True, exist_ok=True)
 
+db = read_db(args.database)
+
 res = []
 for path in file_paths:
     print()
@@ -49,7 +55,7 @@ for path in file_paths:
     faces = detect_faces(img)
 
     # Replace Faces
-    output_img = tinyface.swap_faces_db(img, faces, faces)
+    output_img = tinyface.swap_faces_db(img, faces, db)
 
     if not args.output == None:
         output_path = output_folder / (path.stem + "_swapped" + path.suffix)
