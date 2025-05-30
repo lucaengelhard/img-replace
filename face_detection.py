@@ -4,6 +4,8 @@ from typing import Union
 from tinyface import FaceEmbedder, Face
 import numpy as np
 
+from tqdm import tqdm
+
 # https://docs.opencv.org/4.x/df/d20/classcv_1_1FaceDetectorYN.html
 
 detector = cv2.FaceDetectorYN.create(
@@ -23,10 +25,12 @@ def detect_faces(img_input: Union[str, np.ndarray]) -> list[Face]:
 
     height, width, _ = img.shape
     detector.setInputSize((width, height))
+    print(" - Detecting faces")
     _, faces = detector.detect(img)
     res = []
 
-    for face in faces:
+    print(" - Processing detected faces")
+    for face in tqdm(faces):
         x = int(face[0])
         y = int(face[1])
         w = int(face[2])
