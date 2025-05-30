@@ -1,8 +1,9 @@
 import cv2
 from typing import Union
+import numpy as np
 
 from tinyface import FaceEmbedder, Face
-import numpy as np
+from utils import s_print
 
 from tqdm import tqdm
 
@@ -15,7 +16,7 @@ detector = cv2.FaceDetectorYN.create(
 embedder = FaceEmbedder()
 
 
-def detect_faces(img_input: Union[str, np.ndarray]) -> list[Face]:
+def detect_faces(img_input: Union[str, np.ndarray], silent=False) -> list[Face]:
     if isinstance(img_input, str):
         img = cv2.imread(img_input)
         if img is None:
@@ -25,12 +26,15 @@ def detect_faces(img_input: Union[str, np.ndarray]) -> list[Face]:
 
     height, width, _ = img.shape
     detector.setInputSize((width, height))
-    print(" - Detecting faces")
+
+    s_print(" - Detecting faces", silent)
+
     _, faces = detector.detect(img)
     res = []
 
-    print(" - Processing detected faces")
-    for face in tqdm(faces):
+    s_print(" - Processing detected faces", silent)
+
+    for face in tqdm(faces, disable=silent):
         x = int(face[0])
         y = int(face[1])
         w = int(face[2])
@@ -57,5 +61,5 @@ def detect_faces(img_input: Union[str, np.ndarray]) -> list[Face]:
                 normed_embedding=normed_embedding,
             ),
         )
-    print()
+    s_print("", silent)
     return res

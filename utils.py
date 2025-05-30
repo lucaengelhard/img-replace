@@ -86,3 +86,8 @@ def display_imgs(imgs: list, scale=(1920, 1080), faces=None):
             break
 
     cv2.destroyAllWindows()
+
+
+def s_print(content, silent=False):
+    if not silent:
+        print(content)

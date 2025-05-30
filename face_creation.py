@@ -2,6 +2,7 @@ import requests
 import cv2
 import numpy as np
 import json
+from tqdm import tqdm
 
 from tinyface import Face
 from face_detection import detect_faces
@@ -13,12 +14,14 @@ def get_new_face():
     response = requests.get(url)
     image_array = np.asarray(bytearray(response.content), dtype=np.uint8)
     img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-    return max(detect_faces(img), key=lambda face: face.score)
+    return max(detect_faces(img, silent=True), key=lambda face: face.score)
 
 
 def create_db(amount=10, filename="faces_db.json"):
     faces_data = []
-    for i in range(amount):
+    print(f"Creating {amount} faces")
+
+    for _ in tqdm(range(amount)):
         face = get_new_face()
 
         data = {
@@ -33,6 +36,8 @@ def create_db(amount=10, filename="faces_db.json"):
 
     with open(filename, "w") as f:
         json.dump(faces_data, f)
+
+    print(f"Faces saved to {filename}")
 
 
 def read_db(filename="faces_db.json"):
