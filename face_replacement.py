@@ -23,7 +23,7 @@ class Modified_TinyFace(TinyFace):
             )
         return temp_vision_frame
 
-    # TODO: Create DB
+    # TODO: Create DB https://thispersondoesnotexist.com/
     # TODO: function for finding closest match to face
     def swap_faces_db(
         self, vision_frame: VisionFrame, faces: list[Face], options: list[Face]
