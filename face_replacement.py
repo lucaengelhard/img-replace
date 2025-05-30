@@ -28,7 +28,7 @@ class Modified_TinyFace(TinyFace):
     def swap_faces_db(
         self, vision_frame: VisionFrame, faces: list[Face], options: list[Face]
     ):
-        print("Swapping faces")
+        print(" - Swapping faces")
         temp_vision_frame = vision_frame.copy()
 
         for face in tqdm(faces):
