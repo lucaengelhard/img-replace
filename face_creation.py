@@ -41,12 +41,14 @@ def create_db(amount=10, filename="faces_db.json"):
 
 
 def read_db(filename="faces_db.json"):
+    print(f"Reading db {filename}")
+
     with open(filename, "r") as f:
         faces_data = json.load(f)
 
     faces_list = []
 
-    for face_dict in faces_data:
+    for face_dict in tqdm(faces_data):
         face = Face(
             bounding_box=face_dict["bounding_box"],
             score=np.float32(face_dict["score"]),
