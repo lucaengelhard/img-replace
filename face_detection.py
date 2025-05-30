@@ -57,5 +57,5 @@ def detect_faces(img_input: Union[str, np.ndarray]) -> list[Face]:
                 normed_embedding=normed_embedding,
             ),
         )
-
+    print()
     return res

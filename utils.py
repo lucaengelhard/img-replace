@@ -2,6 +2,7 @@ from tinyface import Face
 
 import cv2
 import numpy
+from pathlib import Path
 
 
 def frame_faces(img, faces: list[Face], features=False, scale=1):
@@ -44,3 +45,19 @@ def scale_image_to(img, max_w, max_h):
     new_height = int(height * scale)
 
     return cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
+
+
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp"}
+
+
+def get_image_paths(directory):
+    directory_path = Path(directory)
+    return [
+        str(file)
+        for file in directory_path.rglob("*")
+        if file.suffix.lower() in IMAGE_EXTENSIONS
+    ]
+
+
+def parse_path(str):
+    return Path(str).expanduser().resolve()
