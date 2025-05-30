@@ -1,11 +1,10 @@
 import sys
-import os
 
 import cv2
 from tinyface import TinyFace
 
 from face_detection import detect_faces
-from utils import frame_faces
+from utils import frame_faces, scale_image_to
 
 # Setup
 tinyface = TinyFace()
@@ -32,7 +31,6 @@ faces = detect_faces(path)
 #     ],
 # )
 
-frame_faces(img, faces, True)
 
-cv2.imshow("res", img)
+cv2.imshow("res", scale_image_to(frame_faces(img, faces, True, 3), 1920, 1080))
 cv2.waitKey(0)
