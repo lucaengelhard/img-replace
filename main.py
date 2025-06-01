@@ -6,8 +6,7 @@ from face_detection import detect_faces
 from face_replacement import Modified_TinyFace
 from face_creation import read_db, create_db
 from face_blur import blur_faces
-from utils import display_imgs, get_image_paths, parse_path, get_arg_paths
-from testing import default_test_path
+from utils import display_imgs, frame_faces, get_arg_paths
 
 # Setup
 tinyface = Modified_TinyFace()
@@ -101,9 +100,35 @@ def blur():
         display_imgs([r[0] for r in res], faces=[f[1] for f in res])
 
 
+def detect():
+    file_paths, output_folder = get_arg_paths(args)
+
+    res = []
+    for path in file_paths:
+        print()
+        print(path)
+        # Read Image
+        img = cv2.imread(path)
+
+        # Detect Faces
+        faces = detect_faces(img)
+
+        if not args.output == None:
+            output_path = output_folder / (path.stem + "_swapped" + path.suffix)
+
+            cv2.imwrite(output_path, frame_faces(img, faces, True))
+        else:
+            res.append([img, faces])
+
+    if args.output == None:
+        display_imgs([r[0] for r in res], faces=[f[1] for f in res])
+
+
 if args.mode == None or args.mode == "replace":
     replace()
 elif args.mode == "create":
     create()
 elif args.mode == "blur":
     blur()
+elif args.mode == "detect":
+    detect()
