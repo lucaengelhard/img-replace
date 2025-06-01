@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import numpy
 from pathlib import Path
+from testing import default_test_path
 
 
 def frame_faces(img, faces: list[Face], features=False, scale=1):
@@ -62,6 +63,25 @@ def get_image_paths(directory):
 
 def parse_path(str):
     return Path(str).expanduser().resolve()
+
+
+def get_arg_paths(args):
+    file_paths = [parse_path(default_test_path)]
+    output_folder = None
+
+    if not args.filename == None or not args.directory == None:
+        file_paths.clear()
+        if not args.filename == None:
+            file_paths.append(parse_path(args.filename))
+
+        if not args.directory == None:
+            file_paths.extend(get_image_paths(parse_path(args.directory)))
+
+    if not args.output == None:
+        output_folder = parse_path(args.output)
+        output_folder.mkdir(parents=True, exist_ok=True)
+
+    return file_paths, output_folder
 
 
 def display_img(img, scale=(1920, 1080), faces=None):

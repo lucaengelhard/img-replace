@@ -6,13 +6,12 @@ from face_detection import detect_faces
 from face_replacement import Modified_TinyFace
 from face_creation import read_db, create_db
 from face_blur import blur_faces
-from utils import display_imgs, get_image_paths, parse_path
+from utils import display_imgs, get_image_paths, parse_path, get_arg_paths
+from testing import default_test_path
 
 # Setup
 tinyface = Modified_TinyFace()
 tinyface.prepare()
-
-default_test_path = "./imgs/base_img.jpg"
 
 
 # Arguments
@@ -43,19 +42,7 @@ args = parser.parse_args()
 
 
 def replace():
-    file_paths = [parse_path(default_test_path)]
-
-    if not args.filename == None or not args.directory == None:
-        file_paths.clear()
-        if not args.filename == None:
-            file_paths.append(parse_path(args.filename))
-
-        if not args.directory == None:
-            file_paths.extend(get_image_paths(parse_path(args.directory)))
-
-    if not args.output == None:
-        output_folder = parse_path(args.output)
-        output_folder.mkdir(parents=True, exist_ok=True)
+    file_paths, output_folder = get_arg_paths(args)
 
     db = read_db(args.database)
 
@@ -88,19 +75,7 @@ def create():
 
 
 def blur():
-    file_paths = [parse_path(default_test_path)]
-
-    if not args.filename == None or not args.directory == None:
-        file_paths.clear()
-        if not args.filename == None:
-            file_paths.append(parse_path(args.filename))
-
-        if not args.directory == None:
-            file_paths.extend(get_image_paths(parse_path(args.directory)))
-
-    if not args.output == None:
-        output_folder = parse_path(args.output)
-        output_folder.mkdir(parents=True, exist_ok=True)
+    file_paths, output_folder = get_arg_paths(args)
 
     res = []
     for path in file_paths:
