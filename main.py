@@ -44,8 +44,6 @@ args = parser.parse_args()
 
 multithreading = not args.no_multithreading
 
-print(multithreading)
-
 
 def replace():
     file_paths, output_folder = get_arg_paths(args)
