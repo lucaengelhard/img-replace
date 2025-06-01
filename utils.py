@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import numpy
 from pathlib import Path
-from testing import default_test_path
+import defaults
 
 
 def frame_faces(img: np.ndarray, faces: list[Face], features=False, scale=1):
@@ -67,9 +67,6 @@ def scale_image_to(img, max_w, max_h):
     return cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
 
 
-IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp"}
-
-
 def get_image_paths(directory):
     """
     Get the path of every image within a directory
@@ -81,7 +78,7 @@ def get_image_paths(directory):
     return [
         str(file)
         for file in directory_path.rglob("*")
-        if file.suffix.lower() in IMAGE_EXTENSIONS
+        if file.suffix.lower() in defaults.IMAGE_EXTENSIONS
     ]
 
 
@@ -97,7 +94,7 @@ def get_arg_paths(args):
 
     """
 
-    file_paths = [parse_path(default_test_path)]
+    file_paths = [parse_path(defaults.TEST_PATH)]
     output_folder = None
 
     if not args.filename == None or not args.directory == None:
