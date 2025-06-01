@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 from tinyface import Face
 from face_detection import detect_faces
+import defaults
 
 url = "https://thispersondoesnotexist.com/"
 
@@ -40,7 +41,10 @@ def create_db(amount=10, filename="faces_db.json"):
     print(f"Faces saved to {filename}")
 
 
-def read_db(filename="faces_db.json"):
+def read_db(filename=defaults.DATABASE):
+    if filename == None:
+        filename = defaults.DATABASE
+
     print(f"Reading db {filename}")
 
     with open(filename, "r") as f:

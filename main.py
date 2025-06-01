@@ -18,12 +18,12 @@ tinyface.prepare()
 class FaceReplace:
     def __init__(
         self,
-        mode: str,
-        filename: Union[str, None],
-        directory: Union[str, None],
-        output: Union[str, None],
-        database: Union[str, None],
-        amount: Union[int, None],
+        mode: str = "replace",
+        filename: Union[str, None] = None,
+        directory: Union[str, None] = None,
+        output: Union[str, None] = None,
+        database: Union[str, None] = None,
+        amount: Union[int, None] = None,
         overwrite=False,
         multithreading=True,
         display=False,
@@ -56,7 +56,7 @@ class FaceReplace:
                 detect_faces_threads, detect_faces, self.multithreading, img
             )
 
-            if not args.output == None:
+            if not self.output == None:
                 output_path = output_folder / (path.stem + "_swapped" + path.suffix)
                 cv2.imwrite(output_path, frame_faces(img, faces, True))
 
@@ -85,7 +85,7 @@ class FaceReplace:
             # Blur Faces
             output_img = blur_faces(img, faces)
 
-            if not args.output == None:
+            if not self.output == None:
                 output_path = output_folder / (path.stem + "_swapped" + path.suffix)
                 cv2.imwrite(output_path, output_img)
 
@@ -123,7 +123,7 @@ class FaceReplace:
                 db,
             )
 
-            if not args.output == None:
+            if not self.output == None:
                 output_path = output_folder / (path.stem + "_swapped" + path.suffix)
                 cv2.imwrite(output_path, output_img)
 
@@ -158,6 +158,7 @@ class FaceReplace:
 
 
 if __name__ == "__main__":
+
     # Arguments
     parser = argparse.ArgumentParser(
         prog="Face Replace", description="Detect and Replace faces in images"
@@ -174,7 +175,6 @@ if __name__ == "__main__":
         "-db",
         "--database",
         help="Database path of generated faces",
-        default="faces_db.json",
     )
     parser.add_argument(
         "-a", "--amount", type=int, help="Amount of created faces", default=10
