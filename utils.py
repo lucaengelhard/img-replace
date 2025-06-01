@@ -123,3 +123,23 @@ def get_img(img_input: Union[str, np.ndarray]) -> np.ndarray:
         img = img_input
 
     return img
+
+
+def conditional_call(func1, func2, condition, *args, **kwargs):
+    """
+    Calls either func1 or func2 based on the value of condition.
+
+    Parameters:
+        func1 (callable): First function to potentially call.
+        func2 (callable): Second function to potentially call.
+        condition (bool): If True, calls func1; if False, calls func2.
+        *args: Positional arguments to pass to the chosen function.
+        **kwargs: Keyword arguments to pass to the chosen function.
+
+    Returns:
+        The result of the chosen function call.
+    """
+    if condition:
+        return func1(*args, **kwargs)
+    else:
+        return func2(*args, **kwargs)

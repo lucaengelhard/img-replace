@@ -47,7 +47,7 @@ def detect_faces(img_input: Union[str, np.ndarray], silent=False) -> list[Face]:
     img = get_img(img_input)
     height, width, _ = img.shape
 
-    s_print(" - Detecting faces", silent)
+    s_print(" - Detecting faces (Single Thread)", silent)
     detector.setInputSize((width, height))
 
     _, faces = detector.detect(img)
@@ -80,7 +80,7 @@ def detect_faces_threads(img_input: Union[str, np.ndarray], silent=False) -> lis
         s_print(" - No faces detected", silent)
         return res
 
-    s_print(" - Processing detected faces (threads)", silent)
+    s_print(" - Processing detected faces", silent)
 
     with ThreadPoolExecutor() as executor:
         futures = [executor.submit(_process_face, face, img) for face in faces]

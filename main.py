@@ -6,7 +6,7 @@ from face_detection import detect_faces, detect_faces_threads
 from face_replacement import Modified_TinyFace
 from face_creation import read_db, create_db
 from face_blur import blur_faces
-from utils import display_imgs, frame_faces, get_arg_paths
+from utils import display_imgs, frame_faces, get_arg_paths, conditional_call
 
 # Setup
 tinyface = Modified_TinyFace()
@@ -34,10 +34,17 @@ parser.add_argument(
 parser.add_argument(
     "-a", "--amount", type=int, help="Amount of created faces", default=10
 )
-# TODO: parser.add_argument("-ov", "--overwrite", type=bool, help="Overwrite?", default=False)
+parser.add_argument("-ov", "--overwrite", action="store_true", help="Overwrite?")
+parser.add_argument(
+    "-nm", "--no-multithreading", action="store_true", help="Disable multithreading"
+)
 
 ## Parse Arguments
 args = parser.parse_args()
+
+multithreading = not args.no_multithreading
+
+print(multithreading)
 
 
 def replace():
@@ -53,10 +60,19 @@ def replace():
         img = cv2.imread(path)
 
         # Detect Faces
-        faces = detect_faces_threads(img)
+        faces = conditional_call(
+            detect_faces_threads, detect_faces, multithreading, img
+        )
 
         # Replace Faces
-        output_img = tinyface.swap_faces_db_threads(img, faces, db)
+        output_img = conditional_call(
+            tinyface.swap_faces_db_threads,
+            tinyface.swap_faces_db,
+            multithreading,
+            img,
+            faces,
+            db,
+        )
 
         if not args.output == None:
             output_path = output_folder / (path.stem + "_swapped" + path.suffix)
@@ -85,7 +101,9 @@ def blur():
         img = cv2.imread(path)
 
         # Detect Faces
-        faces = detect_faces_threads(img)
+        faces = conditional_call(
+            detect_faces_threads, detect_faces, multithreading, img
+        )
 
         # Blur Faces
         output_img = blur_faces(img, faces)
@@ -113,7 +131,9 @@ def detect():
         img = cv2.imread(path)
 
         # Detect Faces
-        faces = detect_faces_threads(img)
+        faces = conditional_call(
+            detect_faces_threads, detect_faces, multithreading, img
+        )
 
         if not args.output == None:
             output_path = output_folder / (path.stem + "_swapped" + path.suffix)
