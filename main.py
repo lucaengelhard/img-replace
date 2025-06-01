@@ -2,7 +2,7 @@ import cv2
 
 import argparse
 
-from face_detection import detect_faces
+from face_detection import detect_faces, detect_faces_threads
 from face_replacement import Modified_TinyFace
 from face_creation import read_db, create_db
 from face_blur import blur_faces
@@ -53,7 +53,7 @@ def replace():
         img = cv2.imread(path)
 
         # Detect Faces
-        faces = detect_faces(img)
+        faces = detect_faces_threads(img)
 
         # Replace Faces
         output_img = tinyface.swap_faces_db(img, faces, db)
@@ -113,7 +113,7 @@ def detect():
         img = cv2.imread(path)
 
         # Detect Faces
-        faces = detect_faces(img)
+        faces = detect_faces_threads(img)
 
         if not args.output == None:
             output_path = output_folder / (path.stem + "_swapped" + path.suffix)

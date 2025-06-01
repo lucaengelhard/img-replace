@@ -5,6 +5,8 @@ import numpy as np
 from tinyface import FaceEmbedder, Face
 from utils import s_print, get_img
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 from tqdm import tqdm
 
 # https://docs.opencv.org/4.x/df/d20/classcv_1_1FaceDetectorYN.html
@@ -59,5 +61,30 @@ def detect_faces(img_input: Union[str, np.ndarray], silent=False) -> list[Face]:
 
     for face in tqdm(faces, disable=silent):
         res.append(_process_face(face, img))
+
     s_print("", silent)
+    return res
+
+
+def detect_faces_threads(img_input: Union[str, np.ndarray], silent=False) -> list[Face]:
+    img = get_img(img_input)
+    height, width, _ = img.shape
+
+    s_print(" - Detecting faces", silent)
+    detector.setInputSize((width, height))
+
+    _, faces = detector.detect(img)
+
+    res = []
+    if faces is None or len(faces) == 0:
+        s_print(" - No faces detected", silent)
+        return res
+
+    s_print(" - Processing detected faces (threads)", silent)
+
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(_process_face, face, img) for face in faces]
+        for future in tqdm(as_completed(futures), total=len(futures), disable=silent):
+            res.append(future.result())
+
     return res
