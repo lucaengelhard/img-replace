@@ -101,6 +101,10 @@ class FaceReplace:
 
         db = read_db(self.database)
 
+        if db == None:
+            print(" - No database found and no new database created. Exiting.")
+            return
+
         res: list[tuple[VisionFrame, list[Face]]] = []
         for path in file_paths:
             print()

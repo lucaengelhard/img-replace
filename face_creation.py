@@ -2,10 +2,12 @@ import requests
 import cv2
 import numpy as np
 import json
+import os
 from tqdm import tqdm
 
 from tinyface import Face
 from face_detection import detect_faces
+from utils import parse_path
 import defaults
 
 url = "https://thispersondoesnotexist.com/"
@@ -18,7 +20,7 @@ def get_new_face():
     return max(detect_faces(img, silent=True), key=lambda face: face.score)
 
 
-def create_db(amount=10, filename="faces_db.json"):
+def create_db(amount=defaults.DATABASE_SIZE, filename="faces_db.json"):
     faces_data = []
     print(f"Creating {amount} faces")
 
@@ -44,6 +46,39 @@ def create_db(amount=10, filename="faces_db.json"):
 def read_db(filename=defaults.DATABASE):
     if filename == None:
         filename = defaults.DATABASE
+
+    filename = parse_path(filename)
+
+    if not os.path.exists(filename):
+        print(" - No Database found")
+
+        yes = {"y", "yes"}
+        no = {"n", "no"}
+
+        answer = input(" - Create new database (internet connection required) [y/n]: ")
+
+        if answer.lower() in yes:
+            cont = False
+            amount_int = defaults.DATABASE_SIZE
+            while not cont:
+                amount_str = input(" - How big should the new database be? ")
+
+                if not amount_str.isdigit():
+                    print("   The amount has to be a number!")
+                    continue
+
+                amount_int = int(amount_str)
+
+                if amount_int > 1:
+                    cont = True
+                    continue
+
+                print("   The amount has to be at least 1!")
+
+            create_db(amount_int, filename)
+
+        elif answer.lower() in no:
+            return None
 
     print(f"Reading db {filename}")
 
