@@ -16,45 +16,48 @@ detector = cv2.FaceDetectorYN.create(
 embedder = FaceEmbedder()
 
 
+def _extract_landmarks(face_data: np.ndarray) -> np.ndarray:
+    return np.array(
+        [
+            [face_data[4], face_data[5]],
+            [face_data[6], face_data[7]],
+            [face_data[8], face_data[9]],
+            [face_data[10], face_data[11]],
+            [face_data[12], face_data[13]],
+        ]
+    )
+
+
+def _process_face(face_data: np.ndarray, img: np.ndarray) -> Face:
+    x, y, w, h = map(int, face_data[:4])
+    landmarks = _extract_landmarks(face_data)
+    embedding, normed_embedding = embedder.calc_embedding(img, landmarks)
+    return Face(
+        bounding_box=[x, y, w, h],
+        score=face_data[14],
+        landmark_5=landmarks,
+        embedding=embedding,
+        normed_embedding=normed_embedding,
+    )
+
+
 def detect_faces(img_input: Union[str, np.ndarray], silent=False) -> list[Face]:
     img = get_img(img_input)
-
     height, width, _ = img.shape
-    detector.setInputSize((width, height))
 
     s_print(" - Detecting faces", silent)
+    detector.setInputSize((width, height))
 
     _, faces = detector.detect(img)
+
     res = []
+    if faces is None or len(faces) == 0:
+        s_print(" - No faces detected", silent)
+        return res
 
     s_print(" - Processing detected faces", silent)
 
     for face in tqdm(faces, disable=silent):
-        x = int(face[0])
-        y = int(face[1])
-        w = int(face[2])
-        h = int(face[3])
-
-        face_landmark_5 = np.array(
-            [
-                [face[4], face[5]],
-                [face[6], face[7]],
-                [face[8], face[9]],
-                [face[10], face[11]],
-                [face[12], face[13]],
-            ]
-        )
-
-        embedding, normed_embedding = embedder.calc_embedding(img, face_landmark_5)
-
-        res.append(
-            Face(
-                bounding_box=[x, y, w, h],
-                score=face[14],
-                landmark_5=face_landmark_5,
-                embedding=embedding,
-                normed_embedding=normed_embedding,
-            ),
-        )
+        res.append(_process_face(face, img))
     s_print("", silent)
     return res
