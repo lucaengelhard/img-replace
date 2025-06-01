@@ -43,33 +43,24 @@ def create_db(amount=defaults.DATABASE_SIZE, filename="faces_db.json"):
     print(f"Faces saved to {filename}")
 
 
-def read_db(filename=defaults.DATABASE):
+def read_db(filename=defaults.DATABASE, cli=False):
     if filename == None:
         filename = defaults.DATABASE
 
     filename = parse_path(filename)
 
     if not os.path.exists(filename):
-        print(" - No Database found")
+        if cli:
+            print(" - No Database found")
+            yes = {"y", "yes"}
+            no = {"n", "no"}
 
-        yes = {"y", "yes"}
-        no = {"n", "no"}
-
-        answer = input(" - Create new database (internet connection required) [y/n]: ")
-
-        if answer.lower() in yes:
-            # Get DB Name
-            new_name_input = input(
-                f" - What should the database be called? [{defaults.DATABASE}] "
+            answer = input(
+                " - Create new database (internet connection required) [y/n]: "
             )
 
-            if len(new_name_input) == 0:
-                new_name_input = defaults.DATABASE
-
-            new_name = parse_path(new_name_input)
-
-            while os.path.exists(new_name):
-                print("   File already exists!")
+            if answer.lower() in yes:
+                # Get DB Name
                 new_name_input = input(
                     f" - What should the database be called? [{defaults.DATABASE}] "
                 )
@@ -79,30 +70,44 @@ def read_db(filename=defaults.DATABASE):
 
                 new_name = parse_path(new_name_input)
 
-            filename = new_name
+                while os.path.exists(new_name):
+                    print("   File already exists!")
+                    new_name_input = input(
+                        f" - What should the database be called? [{defaults.DATABASE}] "
+                    )
 
-            # Get DB Size
-            cont = False
-            amount_int = defaults.DATABASE_SIZE
-            while not cont:
-                amount_str = input(" - How big should the new database be? ")
+                    if len(new_name_input) == 0:
+                        new_name_input = defaults.DATABASE
 
-                if not amount_str.isdigit():
-                    print("   The amount has to be a number!")
-                    continue
+                    new_name = parse_path(new_name_input)
 
-                amount_int = int(amount_str)
+                filename = new_name
 
-                if amount_int > 1:
-                    cont = True
-                    continue
+                # Get DB Size
+                cont = False
+                amount_int = defaults.DATABASE_SIZE
+                while not cont:
+                    amount_str = input(" - How big should the new database be? ")
 
-                print("   The amount has to be at least 1!")
+                    if not amount_str.isdigit():
+                        print("   The amount has to be a number!")
+                        continue
 
-            create_db(amount_int, filename)
+                    amount_int = int(amount_str)
 
-        elif answer.lower() in no:
-            return None
+                    if amount_int > 1:
+                        cont = True
+                        continue
+
+                    print("   The amount has to be at least 1!")
+
+                create_db(amount_int, filename)
+
+            elif answer.lower() in no:
+                return None
+
+        else:
+            raise ValueError("No Database found")
 
     print(f"Reading db {filename}")
 

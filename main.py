@@ -24,9 +24,10 @@ class FaceReplace:
         output: Union[str, None] = None,
         database: Union[str, None] = None,
         amount: Union[int, None] = None,
-        overwrite=False,
+        # overwrite=False,
         multithreading=True,
         display=False,
+        cli=False,
     ):
         self.mode = self._check_mode(mode)
         self.filename = filename
@@ -34,9 +35,10 @@ class FaceReplace:
         self.output = output
         self.database = database
         self.amout = self._check_amout(amount)
-        self.overwrite = overwrite
+        # self.overwrite = overwrite
         self.multithreading = multithreading
         self.display = display
+        self.cli = cli
 
     def create(self):
         create_db(self.amout, self.database)
@@ -99,7 +101,7 @@ class FaceReplace:
     def replace(self):
         file_paths, output_folder = get_arg_paths(self)
 
-        db = read_db(self.database)
+        db = read_db(self.database, self.cli)
 
         if db == None:
             print(" - No database found and no new database created. Exiting.")
@@ -183,7 +185,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-a", "--amount", type=int, help="Amount of created faces", default=10
     )
-    parser.add_argument("-ov", "--overwrite", action="store_true", help="Overwrite?")
+    # parser.add_argument("-ov", "--overwrite", action="store_true", help="Overwrite?")
     parser.add_argument(
         "-nm", "--no-multithreading", action="store_true", help="Disable multithreading"
     )
@@ -199,9 +201,10 @@ if __name__ == "__main__":
         output=args.output,
         database=args.database,
         amount=args.amount,
-        overwrite=args.overwrite,
+        # overwrite=args.overwrite,
         multithreading=(not args.no_multithreading),
         display=args.display,
+        cli=True,
     )
 
     replacer.execute()
