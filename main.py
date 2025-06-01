@@ -15,6 +15,20 @@ tinyface = Modified_TinyFace()
 tinyface.prepare()
 
 
+"""
+TODO:
+    - Testing
+        - Speed
+        - Different OS
+        - Different PCs
+        - Quality of replacements
+        - Different Imgs
+    - GIMP Plugin
+    - Name
+        - Maybe reference a famous political photographer?
+"""
+
+
 class FaceReplace:
     def __init__(
         self,
