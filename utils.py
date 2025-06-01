@@ -124,6 +124,9 @@ def display_img(img, scale=(1920, 1080), faces=None):
 
 
 def display_imgs(imgs: list, scale=(1920, 1080), faces=None):
+    print()
+    print(f" - Displaying images ({len(imgs)})")
+
     for i, img in enumerate(imgs):
         i_faces = None
         if faces != None:

@@ -1,6 +1,7 @@
 import cv2
 import argparse
 from typing import Union
+from tinyface import VisionFrame, Face
 
 from face_detection import detect_faces, detect_faces_threads
 from face_replacement import Modified_TinyFace
@@ -43,7 +44,7 @@ class FaceReplace:
     def detect(self):
         file_paths, output_folder = get_arg_paths(self)
 
-        res = []
+        res: list[tuple[VisionFrame, list[Face]]] = []
         for path in file_paths:
             print()
             print(path)
@@ -59,7 +60,7 @@ class FaceReplace:
                 output_path = output_folder / (path.stem + "_swapped" + path.suffix)
                 cv2.imwrite(output_path, frame_faces(img, faces, True))
 
-            res.append([img, faces])
+            res.append((img, faces))
 
         if self.display:
             display_imgs([r[0] for r in res], faces=[f[1] for f in res])
@@ -69,7 +70,7 @@ class FaceReplace:
     def blur(self):
         file_paths, output_folder = get_arg_paths(self)
 
-        res = []
+        res: list[tuple[VisionFrame, list[Face]]] = []
         for path in file_paths:
             print()
             print(path)
@@ -88,7 +89,7 @@ class FaceReplace:
                 output_path = output_folder / (path.stem + "_swapped" + path.suffix)
                 cv2.imwrite(output_path, output_img)
 
-            res.append([output_img, faces])
+            res.append((output_img, faces))
 
         if self.display:
             display_imgs([r[0] for r in res], faces=[f[1] for f in res])
@@ -100,7 +101,7 @@ class FaceReplace:
 
         db = read_db(self.database)
 
-        res = []
+        res: list[tuple[VisionFrame, list[Face]]] = []
         for path in file_paths:
             print()
             print(path)
@@ -126,7 +127,7 @@ class FaceReplace:
                 output_path = output_folder / (path.stem + "_swapped" + path.suffix)
                 cv2.imwrite(output_path, output_img)
 
-            res.append([output_img, faces])
+            res.append((output_img, faces))
 
         if self.display:
             display_imgs([r[0] for r in res], faces=[f[1] for f in res])
@@ -135,13 +136,13 @@ class FaceReplace:
 
     def execute(self):
         if self.mode == None or self.mode == "replace":
-            self.replace()
+            return self.mode, self.replace()
         elif self.mode == "create":
-            self.create()
+            return self.mode, self.create()
         elif self.mode == "blur":
-            self.blur()
+            return self.mode, self.blur()
         elif self.mode == "detect":
-            self.detect()
+            return self.mode, self.detect()
 
     def _check_mode(self, input: str):
         if input.lower() not in defaults.MODES:
