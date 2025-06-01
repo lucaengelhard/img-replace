@@ -1,5 +1,11 @@
+# Image Files
 *.jpg
 *.png
+
+# Database Files
+*.json
+
+# Python files
+.venv/
 __pycache__
 
-*.json
