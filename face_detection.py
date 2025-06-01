@@ -3,7 +3,7 @@ from typing import Union
 import numpy as np
 
 from tinyface import FaceEmbedder, Face
-from utils import s_print
+from utils import s_print, get_img
 
 from tqdm import tqdm
 
@@ -17,12 +17,7 @@ embedder = FaceEmbedder()
 
 
 def detect_faces(img_input: Union[str, np.ndarray], silent=False) -> list[Face]:
-    if isinstance(img_input, str):
-        img = cv2.imread(img_input)
-        if img is None:
-            raise ValueError(f"Could not read image from path: {img_input}")
-    elif isinstance(img_input, np.ndarray):
-        img = img_input
+    img = get_img(img_input)
 
     height, width, _ = img.shape
     detector.setInputSize((width, height))

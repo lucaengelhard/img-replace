@@ -1,5 +1,6 @@
 from tinyface import Face
-
+from typing import Union
+import numpy as np
 import cv2
 import numpy
 from pathlib import Path
@@ -91,3 +92,14 @@ def display_imgs(imgs: list, scale=(1920, 1080), faces=None):
 def s_print(content, silent=False):
     if not silent:
         print(content)
+
+
+def get_img(img_input: Union[str, np.ndarray]) -> np.ndarray:
+    if isinstance(img_input, str):
+        img = cv2.imread(img_input)
+        if img is None:
+            raise ValueError(f"Could not read image from path: {img_input}")
+    elif isinstance(img_input, np.ndarray):
+        img = img_input
+
+    return img
