@@ -60,13 +60,14 @@ def replace():
 
         if not args.output == None:
             output_path = output_folder / (path.stem + "_swapped" + path.suffix)
-
             cv2.imwrite(output_path, output_img)
-        else:
-            res.append([output_img, faces])
+
+        res.append([output_img, faces])
 
     if args.output == None:
         display_imgs([r[0] for r in res], faces=[f[1] for f in res])
+
+    return res
 
 
 def create():
@@ -91,13 +92,14 @@ def blur():
 
         if not args.output == None:
             output_path = output_folder / (path.stem + "_swapped" + path.suffix)
-
             cv2.imwrite(output_path, output_img)
-        else:
-            res.append([output_img, faces])
+
+        res.append([output_img, faces])
 
     if args.output == None:
         display_imgs([r[0] for r in res], faces=[f[1] for f in res])
+
+    return res
 
 
 def detect():
@@ -115,13 +117,14 @@ def detect():
 
         if not args.output == None:
             output_path = output_folder / (path.stem + "_swapped" + path.suffix)
-
             cv2.imwrite(output_path, frame_faces(img, faces, True))
-        else:
-            res.append([img, faces])
+
+        res.append([img, faces])
 
     if args.output == None:
         display_imgs([r[0] for r in res], faces=[f[1] for f in res])
+
+    return res
 
 
 if args.mode == None or args.mode == "replace":
