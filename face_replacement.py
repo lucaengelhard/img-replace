@@ -42,16 +42,13 @@ class Modified_TinyFace(TinyFace):
         return temp_vision_frame
 
 
-# TODO: Make mor efficient (Vectorisation)
 def get_closest_face(face: Face, db: list[Face]):
-    lowest = None
-    res = db[0]
+    target = face.normed_embedding
 
-    for option in db:
-        cos_distance = np.dot(face.normed_embedding, option.normed_embedding)
+    options = np.vstack([f.normed_embedding for f in db])
 
-        if lowest == None or cos_distance < lowest:
-            lowest = cos_distance
-            res = option
+    similarities = options @ target
 
-    return res
+    best = np.argmax(similarities)
+
+    return db[best]
