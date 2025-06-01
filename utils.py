@@ -7,7 +7,16 @@ from pathlib import Path
 from testing import default_test_path
 
 
-def frame_faces(img, faces: list[Face], features=False, scale=1):
+def frame_faces(img: np.ndarray, faces: list[Face], features=False, scale=1):
+    """
+
+    :param img: The image to compute
+    :param faces: A list of Faces
+    :param feature: Decides if features (eyes, nose, mouth) should also be marked
+    :param scale: scales the thickness of the drawn lines
+    :return: a new image
+    """
+
     newImg = img.copy()
     for face in faces:
         x = int(face.bounding_box[0])
@@ -35,6 +44,15 @@ def frame_faces(img, faces: list[Face], features=False, scale=1):
 
 
 def scale_image_to(img, max_w, max_h):
+    """
+    Scales an image to adhere to a given width and height
+
+    :param img: The image to compute
+    :param max_w: the maximum width of the resulting image
+    :param max_h: the maximum height of the resulting image
+    :return: a new image
+    """
+
     # Get original dimensions
     height, width = img.shape[:2]
 
@@ -53,6 +71,12 @@ IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp"}
 
 
 def get_image_paths(directory):
+    """
+    Get the path of every image within a directory
+
+    :return: a list of path strings
+    """
+
     directory_path = Path(directory)
     return [
         str(file)
@@ -62,10 +86,17 @@ def get_image_paths(directory):
 
 
 def parse_path(str):
+    """ """
+
     return Path(str).expanduser().resolve()
 
 
 def get_arg_paths(args):
+    """
+    Get the file paths and the output folder from the cli args
+
+    """
+
     file_paths = [parse_path(default_test_path)]
     output_folder = None
 
@@ -109,12 +140,22 @@ def display_imgs(imgs: list, scale=(1920, 1080), faces=None):
     cv2.destroyAllWindows()
 
 
-def s_print(content, silent=False):
+def s_print(
+    silent=False,
+    *args,
+    **kwargs,
+):
+    """
+    Wrapper for the print function, that doesn't print if silent == True
+
+    """
     if not silent:
-        print(content)
+        print(*args, **kwargs)
 
 
 def get_img(img_input: Union[str, np.ndarray]) -> np.ndarray:
+    """ """
+
     if isinstance(img_input, str):
         img = cv2.imread(img_input)
         if img is None:

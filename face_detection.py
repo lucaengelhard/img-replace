@@ -47,22 +47,22 @@ def detect_faces(img_input: Union[str, np.ndarray], silent=False) -> list[Face]:
     img = get_img(img_input)
     height, width, _ = img.shape
 
-    s_print(" - Detecting faces (Single Thread)", silent)
+    s_print(silent, " - Detecting faces (Single Thread)")
     detector.setInputSize((width, height))
 
     _, faces = detector.detect(img)
 
     res = []
     if faces is None or len(faces) == 0:
-        s_print(" - No faces detected", silent)
+        s_print(silent, " - No faces detected")
         return res
 
-    s_print(" - Processing detected faces", silent)
+    s_print(silent, " - Processing detected faces")
 
     for face in tqdm(faces, disable=silent):
         res.append(_process_face(face, img))
 
-    s_print("", silent)
+    s_print(silent)
     return res
 
 
@@ -70,17 +70,17 @@ def detect_faces_threads(img_input: Union[str, np.ndarray], silent=False) -> lis
     img = get_img(img_input)
     height, width, _ = img.shape
 
-    s_print(" - Detecting faces", silent)
+    s_print(silent, " - Detecting faces")
     detector.setInputSize((width, height))
 
     _, faces = detector.detect(img)
 
     res = []
     if faces is None or len(faces) == 0:
-        s_print(" - No faces detected", silent)
+        s_print(silent, " - No faces detected")
         return res
 
-    s_print(" - Processing detected faces", silent)
+    s_print(silent, " - Processing detected faces")
 
     with ThreadPoolExecutor() as executor:
         futures = [executor.submit(_process_face, face, img) for face in faces]
