@@ -58,6 +58,30 @@ def read_db(filename=defaults.DATABASE):
         answer = input(" - Create new database (internet connection required) [y/n]: ")
 
         if answer.lower() in yes:
+            # Get DB Name
+            new_name_input = input(
+                f" - What should the database be called? [{defaults.DATABASE}] "
+            )
+
+            if len(new_name_input) == 0:
+                new_name_input = defaults.DATABASE
+
+            new_name = parse_path(new_name_input)
+
+            while os.path.exists(new_name):
+                print("   File already exists!")
+                new_name_input = input(
+                    f" - What should the database be called? [{defaults.DATABASE}] "
+                )
+
+                if len(new_name_input) == 0:
+                    new_name_input = defaults.DATABASE
+
+                new_name = parse_path(new_name_input)
+
+            filename = new_name
+
+            # Get DB Size
             cont = False
             amount_int = defaults.DATABASE_SIZE
             while not cont:
