@@ -56,7 +56,7 @@ def replace():
         faces = detect_faces_threads(img)
 
         # Replace Faces
-        output_img = tinyface.swap_faces_db(img, faces, db)
+        output_img = tinyface.swap_faces_db_threads(img, faces, db)
 
         if not args.output == None:
             output_path = output_folder / (path.stem + "_swapped" + path.suffix)
@@ -85,7 +85,7 @@ def blur():
         img = cv2.imread(path)
 
         # Detect Faces
-        faces = detect_faces(img)
+        faces = detect_faces_threads(img)
 
         # Blur Faces
         output_img = blur_faces(img, faces)
