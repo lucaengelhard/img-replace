@@ -7,6 +7,7 @@ from face_replacement import Modified_TinyFace
 from face_creation import read_db, create_db
 from face_blur import blur_faces
 from utils import display_imgs, frame_faces, get_arg_paths, conditional_call
+import defaults
 
 # Setup
 tinyface = Modified_TinyFace()
@@ -26,12 +27,12 @@ class FaceReplace:
         multithreading=True,
         display=False,
     ):
-        self.mode = mode
+        self.mode = self._check_mode(mode)
         self.filename = filename
         self.directory = directory
         self.output = output
         self.database = database
-        self.amout = amount
+        self.amout = self._check_amout(amount)
         self.overwrite = overwrite
         self.multithreading = multithreading
         self.display = display
@@ -141,6 +142,18 @@ class FaceReplace:
             self.blur()
         elif self.mode == "detect":
             self.detect()
+
+    def _check_mode(self, input: str):
+        if input.lower() not in defaults.MODES:
+            raise ValueError(f"Mode: {input} is invalid")
+
+        return input
+
+    def _check_amout(self, input: int):
+        if input != None and input < 1:
+            raise ValueError(f"Amount {input} has to be at least 1")
+
+        return input
 
 
 if __name__ == "__main__":
