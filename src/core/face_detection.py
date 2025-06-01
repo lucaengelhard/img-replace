@@ -3,7 +3,7 @@ from typing import Union
 import numpy as np
 
 from tinyface import FaceEmbedder, Face
-from utils import s_print, get_img
+from src.utils import s_print, get_img
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 

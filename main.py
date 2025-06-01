@@ -3,12 +3,12 @@ import argparse
 from typing import Union
 from tinyface import VisionFrame, Face
 
-from face_detection import detect_faces, detect_faces_threads
-from face_replacement import Modified_TinyFace
-from face_creation import read_db, create_db
-from face_blur import blur_faces
-from utils import display_imgs, frame_faces, get_arg_paths, conditional_call
-import defaults
+from src.core.face_detection import detect_faces, detect_faces_threads
+from src.core.face_replacement import Modified_TinyFace
+from src.core.face_creation import read_db, create_db
+from src.core.face_blur import blur_faces
+from src.utils import display_imgs, frame_faces, get_arg_paths, conditional_call
+import src.defaults as defaults
 
 # Setup
 tinyface = Modified_TinyFace()

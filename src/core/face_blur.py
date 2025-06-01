@@ -2,7 +2,7 @@ from tinyface import Face
 import numpy as np
 import cv2
 from typing import Union
-from utils import get_img
+from src.utils import get_img
 from tqdm import tqdm
 
 

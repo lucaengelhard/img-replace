@@ -6,9 +6,9 @@ import os
 from tqdm import tqdm
 
 from tinyface import Face
-from face_detection import detect_faces
-from utils import parse_path
-import defaults
+from src.core.face_detection import detect_faces
+from src.utils import parse_path
+import src.defaults as defaults
 
 url = "https://thispersondoesnotexist.com/"
 

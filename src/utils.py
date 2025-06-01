@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import numpy
 from pathlib import Path
-import defaults
+import src.defaults as defaults
 
 
 def frame_faces(img: np.ndarray, faces: list[Face], features=False, scale=1):
