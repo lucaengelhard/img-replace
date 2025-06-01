@@ -59,6 +59,7 @@ class Modified_TinyFace(TinyFace):
         print()
         print(" - Applying face pairs")
         for pair in tqdm(pairs):
+            # TODO: Make Multithreadable -> don't overwrite temp_vision_frame every iteration
             temp_vision_frame = self.swapper.swap_face(
                 temp_vision_frame, pair[1], pair[0]
             )
