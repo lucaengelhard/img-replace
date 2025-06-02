@@ -1,4 +1,5 @@
 import cv2
+import os
 import argparse
 from typing import Union
 from tinyface import VisionFrame, Face
@@ -7,7 +8,13 @@ from src.core.face_detection import detect_faces, detect_faces_threads
 from src.core.face_replacement import Modified_TinyFace
 from src.core.face_creation import read_db, create_db
 from src.core.face_blur import blur_faces
-from src.utils import display_imgs, frame_faces, get_arg_paths, conditional_call
+from src.utils import (
+    display_imgs,
+    frame_faces,
+    get_arg_paths,
+    conditional_call,
+    parse_path,
+)
 import src.defaults as defaults
 
 # Setup
@@ -190,7 +197,14 @@ if __name__ == "__main__":
     )
 
     ## Positional Arguments
-    parser.add_argument("mode", nargs="?", default="replace")
+    parser.add_argument(
+        "mode",
+        nargs="?",
+        default="replace",
+        help=f"{", ".join(map(str, defaults.MODES))}",
+    )
+
+    parser.add_argument("input", nargs="?", help="File or directory to parse")
 
     ## Flag Arguments
     parser.add_argument("-f", "--filename", help="Input file name")
@@ -212,11 +226,22 @@ if __name__ == "__main__":
 
     ## Parse Arguments
     args = parser.parse_args()
+    filename = None
+    directory = None
+
+    if args.input == None:
+        filename = args.filename
+        directory = args.directory
+    else:
+        if os.path.isfile(parse_path(args.input)):
+            filename = args.input
+        elif os.path.isdir(parse_path(args.input)):
+            directory = args.input
 
     replacer = FaceReplace(
         mode=args.mode,
-        filename=args.filename,
-        directory=args.directory,
+        filename=filename,
+        directory=directory,
         output=args.output,
         database=args.database,
         amount=args.amount,
