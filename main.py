@@ -22,6 +22,9 @@ TODO:
         - Different OS
         - Different PCs
         - Quality of replacements
+            - Maybe lower threshold for faces that are to similar
+            - Distort faces?
+                -> Shift features
         - Different Imgs
     - GIMP Plugin
     - Name
