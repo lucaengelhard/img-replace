@@ -55,7 +55,7 @@ class FaceReplace:
         self.cli = cli
 
     def create(self):
-        create_db(self.amout, self.database)
+        return create_db(self.amout, self.database)
 
     def detect(self):
         file_paths, output_folder = get_arg_paths(self)
@@ -115,7 +115,9 @@ class FaceReplace:
     def replace(self):
         file_paths, output_folder = get_arg_paths(self)
 
-        db = read_db(self.database, self.cli)
+        db, db_name = read_db(self.database, self.cli)
+
+        self.database = db_name
 
         if db == None:
             print(" - No database found and no new database created. Exiting.")

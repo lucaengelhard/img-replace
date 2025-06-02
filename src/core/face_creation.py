@@ -22,6 +22,7 @@ def get_new_face():
 
 def create_db(amount=defaults.DATABASE_SIZE, filename="faces_db.json"):
     faces_data = []
+    faces: list[Face] = []
     print(f"Creating {amount} faces")
 
     for _ in tqdm(range(amount)):
@@ -36,11 +37,14 @@ def create_db(amount=defaults.DATABASE_SIZE, filename="faces_db.json"):
         }
 
         faces_data.append(data)
+        faces.append(face)
 
     with open(filename, "w") as f:
         json.dump(faces_data, f)
 
     print(f"Faces saved to {filename}")
+
+    return faces, filename
 
 
 def read_db(filename=defaults.DATABASE, cli=False):
@@ -48,6 +52,7 @@ def read_db(filename=defaults.DATABASE, cli=False):
         filename = defaults.DATABASE
 
     filename = parse_path(filename)
+    new_db = False
 
     if not os.path.exists(filename):
         if cli:
@@ -101,7 +106,7 @@ def read_db(filename=defaults.DATABASE, cli=False):
 
                     print("   The amount has to be at least 1!")
 
-                create_db(amount_int, filename)
+                return create_db(amount_int, filename)
 
             elif answer.lower() in no:
                 return None
@@ -114,7 +119,7 @@ def read_db(filename=defaults.DATABASE, cli=False):
     with open(filename, "r") as f:
         faces_data = json.load(f)
 
-    faces_list = []
+    faces_list: list[Face] = []
 
     for face_dict in tqdm(faces_data):
         face = Face(
@@ -127,4 +132,4 @@ def read_db(filename=defaults.DATABASE, cli=False):
 
         faces_list.append(face)
 
-    return faces_list
+    return faces_list, filename
