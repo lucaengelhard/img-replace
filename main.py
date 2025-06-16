@@ -37,6 +37,9 @@ TODO:
     - GIMP Plugin
     - Name
         - Maybe reference a famous political photographer?
+    - Blur:
+        - Different Filters
+        - Not Only Box -> Mask filtered with face shape
 """
 
 
