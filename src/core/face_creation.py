@@ -20,7 +20,7 @@ def get_new_face():
     return max(detect_faces(img, silent=True), key=lambda face: face.score)
 
 
-def create_db(amount=defaults.DATABASE_SIZE, filename="faces_db.json"):
+def create_db(amount=defaults.DATABASE_SIZE, filename=defaults.DATABASE):
     faces_data = []
     faces: list[Face] = []
     print(f"Creating {amount} faces")

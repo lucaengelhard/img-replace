@@ -32,6 +32,7 @@ TODO:
             - Maybe lower threshold for faces that are to similar
             - Distort faces?
                 -> Shift features
+            - Hair / Feature Replacement?
         - Different Imgs
     - GIMP Plugin
     - Name
@@ -214,6 +215,7 @@ if __name__ == "__main__":
         "-db",
         "--database",
         help="Database path of generated faces",
+        default=defaults.DATABASE,
     )
     parser.add_argument(
         "-a", "--amount", type=int, help="Amount of created faces", default=10
