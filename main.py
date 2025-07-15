@@ -37,6 +37,10 @@ TODO:
     - GIMP Plugin
     - Name
         - Maybe reference a famous political photographer?
+            - https://en.wikipedia.org/wiki/Tina_Modotti
+            - https://en.wikipedia.org/wiki/Alexander_Rodchenko
+            - https://de.wikipedia.org/wiki/Gerda_Taro              <--- Lucas Favorit (GERDA oder TARO beides gut)
+            - https://en.wikipedia.org/wiki/Zorki
     - Blur:
         - Different Filters
         - Not Only Box -> Mask filtered with face shape
